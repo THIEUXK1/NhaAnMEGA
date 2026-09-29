@@ -1,0 +1,75 @@
+# Dependencies & Build output
+node_modules/
+vendor/
+dist/
+build/
+.next/
+coverage/
+bin/
+obj/
+*.log
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+composer.lock
+
+# Assets & Media
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.mp4
+*.webm
+*.mp3
+*.wav
+*.pdf
+*.zip
+*.exe
+
+# Maps & Minified
+*.min.js
+*.min.css
+*.map
+*.bundle.js
+
+# Docs & Meta
+CHANGELOG*
+LICENSE*
+.github/
+.idea/
+.vscode/
+.vs/
+.cache/
+tmp/
+logs/
+*.bak
+*.swp
+
+# Secrets & cấu hình cục bộ
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+appsettings.Development.json
+appsettings.Production.json
+Tools/ZkPullerPF/appsettings.json
+Tools/DongBoSuatAnPF/appsettings.json
+NhaAnMEGA/App_Data/Keys/
+*.csproj.user
+
+# Dump / file DB
+*.sql.gz
+*.mdf
+*.ldf
+*.bacpac
+
+# Git internals
+.git/

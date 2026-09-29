@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Check suất ăn";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_LayoutQuanLy.cshtml";
+}
+
+<div class="qs-trang qs-trang-day">
+
+    <div class="qs-tieu-de">
+        <h1><i class="fa-solid fa-image" style="color:var(--qs-xanh)"></i> Check suất ăn chi tiết</h1>
+        <p>Nhập ID lượt quét để xem thông tin nhân viên và ảnh chụp tại thời điểm lấy suất ăn.</p>
+    </div>
+
+    <div class="qs-the">
+        <label class="qs-nhan" for="oIdLuotQuet">ID lượt quét</label>
+        <div class="qs-hang">
+            <input type="number" id="oIdLuotQuet" class="qs-o" style="flex:1 1 220px;"
+                   placeholder="Ví dụ: 10245" autocomplete="off" />
+            <button type="button" class="qs-nut" id="btnTraCuu"><i class="fa-solid fa-magnifying-glass"></i> Tra cứu</button>
+        </div>
+        <span style="display:block; margin-top:8px; color:var(--qs-chu-mo); font-size:.86rem;">
+            Mẹo: nhấn Enter để tra cứu nhanh.
+        </span>
+    </div>
+
+    <div class="qs-the qs-cuon" id="ketQuaTraCuu">
+        <div class="qs-rong">
+            <i class="fa-regular fa-id-badge"></i>
+            Nhập ID để xem thông tin chi tiết
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/check-suat-an.js" asp-append-version="true"></script>
+}

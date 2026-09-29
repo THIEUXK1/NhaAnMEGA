@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Check quên thẻ";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_LayoutQuanLy.cshtml";
+}
+
+<div class="qs-trang qs-trang-day">
+
+    <div class="qs-tieu-de">
+        <h1><i class="fa-solid fa-id-card" style="color:var(--qs-xanh)"></i> Check quên thẻ</h1>
+        <p>Xuất dữ liệu chấm công của nhân viên quên thẻ theo khoảng ngày ra file Excel.</p>
+    </div>
+
+    <div class="qs-the">
+        <form id="formXuatQuenThe">
+            <div class="qs-hang" style="align-items:flex-end;">
+                <div style="flex:1 1 200px;">
+                    <label class="qs-nhan" for="oTuNgay">Từ ngày</label>
+                    <input type="date" id="oTuNgay" name="fromDate" class="qs-o" required />
+                </div>
+                <div style="flex:1 1 200px;">
+                    <label class="qs-nhan" for="oDenNgay">Đến ngày</label>
+                    <input type="date" id="oDenNgay" name="toDate" class="qs-o" required />
+                </div>
+                <button type="button" class="qs-nut qs-nut-phu btn-nhanh" data-so-ngay="0">Hôm nay</button>
+                <button type="button" class="qs-nut qs-nut-phu btn-nhanh" data-so-ngay="7">7 ngày qua</button>
+                <button type="button" class="qs-nut qs-nut-phu btn-nhanh" data-so-ngay="30">30 ngày qua</button>
+                <button type="button" class="qs-nut" id="btnXemBaoCao">
+                    <i class="fa-solid fa-table-list"></i> Xem báo cáo
+                </button>
+                <button type="submit" class="qs-nut qs-nut-luc">
+                    <i class="fa-solid fa-file-excel"></i> Xuất Excel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="qs-the qs-the-cuon">
+        <div class="qs-the-tieu-de">
+            <i class="fa-solid fa-clipboard-list" style="color:var(--qs-xanh)"></i>
+            <span id="tieuDeBaoCao">Báo cáo hôm nay</span>
+            <span style="margin-left:auto; color:var(--qs-chu-mo); font-weight:600;">
+                Tổng: <span id="tongQuenThe">0</span> lượt
+            </span>
+        </div>
+
+        <div class="qs-bang-boc">
+            <table class="qs-bang" id="bangQuenThe">
+                <thead>
+                    <tr>
+                        <th style="width:110px;">Mã NV</th>
+                        <th>Họ tên</th>
+                        <th style="width:130px;">Mã thẻ (SSN)</th>
+                        <th>Bộ phận</th>
+                        <th style="width:170px;">Thời gian quét</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="qs-rong" id="trangThaiQuenThe">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Đang tải báo cáo hôm nay...
+        </div>
+
+        <div class="qs-phan-trang" id="phanTrangQuenThe"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/quenthe.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="NhaAnMEGA/NhaAnMEGA.csproj" />
+  <Project Path="Tools/DongBoSuatAnPF/DongBoSuatAnPF.csproj" />
+  <Project Path="Tools/ZkPullerPF/ZkPullerPF.csproj" />
+</Solution>

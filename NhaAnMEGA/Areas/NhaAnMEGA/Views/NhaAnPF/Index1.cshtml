@@ -1,0 +1,110 @@
+@model IEnumerable<NhaAnMEGA.Models.Zktime.BlacklistPf>
+@{
+    ViewData["Title"] = "Quản lý Blacklist";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_LayoutQuanLy.cshtml";
+}
+
+<div class="qs-trang qs-trang-day">
+
+    <div class="qs-tieu-de">
+        <h1><i class="fa-solid fa-user-lock" style="color:var(--qs-xanh)"></i> Danh sách đen</h1>
+        <button type="button" class="qs-nut" id="btnThemMoi"><i class="fa-solid fa-plus"></i> Thêm mới</button>
+        <a class="qs-nut qs-nut-luc" href="/PF/BlackList/DownloadTemplate"><i class="fa-solid fa-file-arrow-down"></i> Tải mẫu Excel</a>
+        <p>Nhân viên trong danh sách này sẽ bị chặn khi quét thẻ lấy suất ăn.</p>
+    </div>
+
+    <div class="qs-the">
+        <div class="qs-the-tieu-de"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--qs-vang)"></i> Nhập hàng loạt từ Excel</div>
+        <form action="/PF/BlackList/Import" method="post" enctype="multipart/form-data" class="qs-hang">
+            <input type="file" name="file" accept=".xlsx" required class="qs-o" style="flex:1 1 260px; padding:8px 12px;" />
+            <button type="submit" class="qs-nut qs-nut-vang"><i class="fa-solid fa-upload"></i> Import ngay</button>
+            <span style="color:var(--qs-chu-mo); font-size:.88rem;">File .xlsx gồm 2 cột: WorkerId, WorkerName</span>
+        </form>
+    </div>
+
+    <div class="qs-the qs-the-cuon">
+        <div class="qs-hang qs-the-tieu-de">
+            <div class="qs-o-tim">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="oTimBlacklist" class="qs-o" placeholder="Lọc theo mã hoặc tên nhân viên..." autocomplete="off" />
+            </div>
+            <span style="color:var(--qs-chu-mo); font-weight:600;">
+                Tổng: <span id="tongBlacklist">@Model.Count()</span> nhân viên
+            </span>
+        </div>
+
+        <div class="qs-bang-boc">
+            <table class="qs-bang" id="bangBlacklist">
+                <thead>
+                    <tr>
+                        <th style="width:70px;">STT</th>
+                        <th>Mã nhân viên</th>
+                        <th>Họ và tên</th>
+                        <th style="width:210px; text-align:center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr data-id="@item.Id" data-tim="@($"{item.WorkerId} {item.WorkerName}".ToLower())">
+                            <td style="color:var(--qs-chu-mo);">@item.Id</td>
+                            <td><span class="qs-the-ma">@item.WorkerId</span></td>
+                            <td style="font-weight:600;">@item.WorkerName</td>
+                            <td>
+                                <div class="qs-hang" style="justify-content:center; gap:8px;">
+                                    <button type="button" class="qs-nut qs-nut-nho btn-sua"
+                                            data-id="@item.Id" data-ma="@item.WorkerId" data-ten="@item.WorkerName">
+                                        <i class="fa-solid fa-pen"></i> Sửa
+                                    </button>
+                                    <button type="button" class="qs-nut qs-nut-nho qs-nut-do btn-xoa"
+                                            data-id="@item.Id" data-ten="@item.WorkerName">
+                                        <i class="fa-solid fa-trash"></i> Xóa
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="qs-rong" id="khongCoBlacklist" style="display:@(Model.Any() ? "none" : "block");">
+            <i class="fa-regular fa-folder-open"></i>
+            Chưa có nhân viên nào trong danh sách đen
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalBlacklist" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form id="formBlacklist" action="/PF/BlackList/Save" method="post" style="width:100%;">
+            <div class="modal-content" style="border:none; border-radius:var(--qs-bo); overflow:hidden; box-shadow:0 18px 45px rgba(0,0,0,.28);">
+                <div class="modal-header" style="background:var(--qs-xanh); color:#fff; border:none; padding:18px 24px;">
+                    <h5 class="modal-title" id="tieuDeModal" style="font-weight:700; margin:0;">Thông tin chi tiết</h5>
+                    <button type="button" data-dismiss="modal" style="background:none; border:none; color:#fff; font-size:26px; cursor:pointer;">&times;</button>
+                </div>
+
+                <div class="modal-body" style="padding:24px;">
+                    <input type="hidden" name="Id" id="oId" value="0" />
+                    <div style="margin-bottom:16px;">
+                        <label class="qs-nhan" for="oMaNhanVien">Mã nhân viên</label>
+                        <input type="text" name="WorkerId" id="oMaNhanVien" class="qs-o" required autocomplete="off" />
+                    </div>
+                    <div>
+                        <label class="qs-nhan" for="oTenNhanVien">Họ tên nhân viên</label>
+                        <input type="text" name="WorkerName" id="oTenNhanVien" class="qs-o" autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="modal-footer qs-hang" style="background:#f7f9fc; border:none; padding:16px 24px; justify-content:flex-end;">
+                    <button type="button" class="qs-nut qs-nut-phu" data-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="qs-nut"><i class="fa-solid fa-floppy-disk"></i> Lưu dữ liệu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/blacklist.js" asp-append-version="true"></script>
+}

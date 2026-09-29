@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Báo cáo hằng ngày";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_LayoutQuanLy.cshtml";
+}
+
+<div class="qs-trang qs-trang-day">
+
+    <div class="qs-tieu-de">
+        <h1><i class="fa-solid fa-chart-column" style="color:var(--qs-xanh)"></i> Báo cáo hằng ngày</h1>
+        <p>Thống kê suất ăn đã quét theo ngày, theo bữa và theo nhân viên.</p>
+        <button type="button" class="qs-nut qs-nut-phu qs-nut-nho btn-nhanh" data-so-ngay="0">Hôm nay</button>
+        <button type="button" class="qs-nut qs-nut-phu qs-nut-nho btn-nhanh" data-so-ngay="1">Hôm qua</button>
+        <button type="button" class="qs-nut qs-nut-phu qs-nut-nho btn-nhanh" data-so-ngay="7">7 ngày qua</button>
+        <button type="button" class="qs-nut qs-nut-phu qs-nut-nho btn-nhanh" data-so-ngay="30">30 ngày qua</button>
+    </div>
+
+    <div class="qs-the">
+        <div class="qs-hang" style="align-items:flex-end;">
+            <div style="flex:1 1 160px;">
+                <label class="qs-nhan" for="oTuNgay">Từ ngày</label>
+                <input type="date" id="oTuNgay" class="qs-o" />
+            </div>
+            <div style="flex:1 1 160px;">
+                <label class="qs-nhan" for="oDenNgay">Đến ngày</label>
+                <input type="date" id="oDenNgay" class="qs-o" />
+            </div>
+            <div style="flex:1 1 180px;">
+                <span class="qs-nhan">Bữa</span>
+                <div class="qs-loc" id="locBua" data-nhan="Tất cả các bữa" data-tien-to="Bữa "></div>
+            </div>
+            <div style="flex:1 1 180px;">
+                <span class="qs-nhan">Cổng quét</span>
+                <div class="qs-loc" id="locCong" data-nhan="Tất cả cổng quét"></div>
+            </div>
+            <div style="flex:2 1 240px;">
+                <label class="qs-nhan" for="oTimBaoCao">Tìm nhân viên</label>
+                <input type="text" id="oTimBaoCao" class="qs-o" placeholder="Mã NV, tên, mã thẻ, bộ phận..." autocomplete="off" />
+            </div>
+            <button type="button" class="qs-nut" id="btnXemBaoCao"><i class="fa-solid fa-magnifying-glass"></i> Xem</button>
+            <button type="button" class="qs-nut qs-nut-phu" id="btnBoLoc"
+                    title="Bỏ mọi bộ lọc, quay lại báo cáo hôm nay">
+                <i class="fa-solid fa-filter-circle-xmark"></i> Bỏ lọc
+            </button>
+            <button type="button" class="qs-nut qs-nut-phu" id="btnXuatExcel"
+                    title="Xuất Excel theo bộ lọc hiện tại (cả khoảng ngày đã chọn)">
+                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </button>
+        </div>
+    </div>
+
+    <div class="qs-hang" id="theThongKe" style="align-items:stretch;"></div>
+
+    <div class="qs-the qs-the-cuon">
+        <div class="qs-the-tieu-de">
+            <i class="fa-solid fa-list" style="color:var(--qs-xanh)"></i>
+            <span id="tieuDeBaoCao">Chi tiết lượt quét hôm nay</span>
+            <label class="qs-gat" style="margin-left:16px;" title="Gộp tổng suất ăn theo từng ngày trong khoảng đã chọn">
+                <input type="checkbox" id="oGopNgay" />
+                <span class="qs-gat-truot"></span>
+                <span>Gộp theo ngày</span>
+            </label>
+            <span style="margin-left:auto; color:var(--qs-chu-mo); font-weight:600;">
+                Tổng: <span id="tongBaoCao">0</span> suất
+            </span>
+            <label class="qs-nhan" id="nhanSoDong" for="oSoDong" style="margin:0 0 0 16px;">Số dòng/trang</label>
+            <select id="oSoDong" class="qs-o" style="width:auto; min-width:110px;">
+                <option value="0" selected>Tất cả</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+
+        <div class="qs-phan-trang qs-dieu-huong-ngay" id="dieuHuongNgay"></div>
+
+        <div class="qs-bang-boc" id="bocBangChiTiet">
+            <table class="qs-bang" id="bangBaoCao">
+                <thead>
+                    <tr>
+                        <th style="width:110px;">Mã NV</th>
+                        <th>Họ tên</th>
+                        <th style="width:90px;">ID</th>
+                        <th style="width:130px;">Bộ phận</th>
+                        <th style="width:110px;">Bữa</th>
+                        <th style="width:130px;">Cổng quét</th>
+                        <th style="width:170px;">Thời gian</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="qs-bang-boc" id="bocBangGop" hidden>
+            <table class="qs-bang qs-bang-gop" id="bangGopNgay">
+                <thead></thead>
+                <tbody></tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+
+        <div class="qs-rong" id="trangThaiBaoCao">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Đang tải báo cáo hôm nay...
+        </div>
+
+        <div class="qs-phan-trang" id="phanTrangBaoCao"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/baocao-ngay.js" asp-append-version="true"></script>
+}

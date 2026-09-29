@@ -1,0 +1,186 @@
+/* Giao diện riêng màn hình Khách ăn (/NhaAnMEGA/NhaAnPF/KhachAn) */
+
+/* ---- Thẻ thêm khách ăn: ẩn/hiện bằng class, có hiệu ứng trượt ---- */
+.ka-them {
+    display: none;
+}
+
+    .ka-them.hien {
+        display: block;
+        animation: ka-truot .18s ease-out;
+    }
+
+@keyframes ka-truot {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.ka-them-dau {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.ka-them-dong {
+    margin-left: auto;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--qs-chu-mo);
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+
+    .ka-them-dong:hover {
+        background: #f2f5f9;
+        color: var(--qs-do);
+    }
+
+.ka-luoi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+.ka-luoi-nut {
+    display: flex;
+    gap: 8px;
+}
+
+    .ka-luoi-nut .qs-nut {
+        flex: 1 1 auto;
+    }
+
+/* ---- Thanh công cụ trên bảng ---- */
+.ka-cong-cu {
+    gap: 10px;
+}
+
+.ka-tong {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--qs-xanh-nhat);
+    border: 1px solid #cadcff;
+    color: #0050c8;
+    font-size: .86rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ---- Dòng trong bảng ---- */
+.qs-bang tbody tr {
+    transition: background-color .15s;
+}
+
+.ka-ten {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ka-chu-cai {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Ô sửa tại chỗ: chỉ nổi viền khi rê chuột / đang gõ */
+.ka-o-sua {
+    padding: 7px 10px;
+    border-color: transparent;
+    background: transparent;
+    font-weight: 600;
+}
+
+    .ka-o-sua:hover {
+        border-color: var(--qs-vien);
+        background: #fff;
+    }
+
+    .ka-o-sua:focus {
+        background: #fff;
+    }
+
+/* Dòng có thay đổi chưa lưu */
+tr.ka-doi .ka-o-sua {
+    border-color: #ffd98a;
+    background: #fffaf0;
+}
+
+tr.ka-doi .ka-nut-luu {
+    background: var(--qs-luc);
+    border-color: var(--qs-luc);
+    color: #fff;
+}
+
+.ka-thao-tac {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.ka-nut-icon {
+    width: 34px;
+    height: 34px;
+    margin: 0 3px;
+    border: 1px solid var(--qs-vien);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--qs-chu-mo);
+    cursor: pointer;
+    transition: background-color .16s, color .16s, border-color .16s, box-shadow .16s;
+}
+
+    .ka-nut-icon:hover:not(:disabled) {
+        box-shadow: 0 4px 10px rgba(16, 34, 64, .14);
+    }
+
+    .ka-nut-icon:disabled {
+        opacity: .55;
+        cursor: not-allowed;
+    }
+
+.ka-nut-luu:hover:not(:disabled) {
+    background: var(--qs-luc);
+    border-color: var(--qs-luc);
+    color: #fff;
+}
+
+.ka-nut-xoa:hover:not(:disabled) {
+    background: var(--qs-do);
+    border-color: var(--qs-do);
+    color: #fff;
+}
+
+@media (max-width: 700px) {
+    .ka-chu-cai {
+        display: none;
+    }
+
+    .ka-tong {
+        margin-left: 0;
+    }
+}

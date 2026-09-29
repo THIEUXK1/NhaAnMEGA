@@ -1,0 +1,246 @@
+﻿@{
+    ViewData["Title"] = "Đăng nhập hệ thống Nhà Ăn";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_Layout.cshtml";
+}
+
+@model NhaAnMEGA.Areas.NhaAnMEGA.Controllers.NhaAnPFController.UserLoginPF
+
+<style>
+    :root {
+        --primary-color: #4facfe;
+        --secondary-color: #00f2fe;
+        --accent-color: #007bff;
+        --text-color: #333;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://xuonggooccho.com/ckfinder/userfiles/files/hinh-anh-nha-bep-dep(1).jpg');
+        background-size: cover;
+        background-position: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .login-container {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px); /* Hiệu ứng kính mờ */
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 420px;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: transform 0.3s ease;
+    }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .login-header h2 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--text-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 15px;
+        outline: none;
+        transition: all 0.3s;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+        font-size: 14px;
+        color: #666;
+        cursor: pointer;
+    }
+
+        .remember-me input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: opacity 0.3s, transform 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    }
+
+        .btn-login:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+    .validation-summary {
+        background: #fff3f3;
+        color: #d9534f;
+        padding: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #d9534f;
+        margin-bottom: 20px;
+        font-size: 13px;
+        list-style: none;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-header">
+        <h2>Hệ Thống Nhà Ăn</h2>
+        <p>Vui lòng đăng nhập để tiếp tục</p>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="validation-summary">
+            @Html.ValidationSummary(true, "")
+        </div>
+    }
+
+    <form id="loginForm" method="post" action="/PF/Login2">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input type="text" id="username" name="username" required
+                   placeholder="Nhập tài khoản..."
+                   autocomplete="username"
+                   value="@Model?.Username" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" id="password" name="password" required
+                   placeholder="Nhập mật khẩu..."
+                   autocomplete="current-password"
+                   value="@Model?.Password" class="form-control">
+        </div>
+
+        <label class="remember-me">
+            <input type="checkbox" id="rememberMe" name="rememberMe" value="true">
+            Ghi nhớ đăng nhập
+        </label>
+
+        <button type="submit" class="btn-login">Đăng nhập ngay</button>
+    </form>
+</div>
+
+<script>
+    // ===== Quản lý Cookie chuyên nghiệp =====
+    const CookieManager = {
+        path: "/PF", // Đặt path theo Route mới để đồng nhất
+
+        set: function (name, value, days) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=" + this.path + "; SameSite=Strict";
+        },
+
+        get: function (name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+            }
+            return null;
+        },
+
+        erase: function (name) {
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=" + this.path + ";";
+        }
+    };
+
+    // Khi load trang
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const savedUser = CookieManager.get("LoginUsername");
+        const savedPass = CookieManager.get("LoginPassword");
+
+        if (savedUser) {
+            document.getElementById("username").value = savedUser;
+        }
+        if (savedPass) {
+            document.getElementById("password").value = savedPass;
+            document.getElementById("rememberMe").checked = true;
+        }
+    });
+
+    // Khi Submit form
+    document.getElementById("loginForm").addEventListener("submit", function () {
+        const remember = document.getElementById("rememberMe").checked;
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+
+        if (remember) {
+            // Lưu 30 ngày (Thay vì 100 năm để đảm bảo an toàn hơn)
+            CookieManager.set("LoginUsername", user, 30);
+            CookieManager.set("LoginPassword", pass, 30);
+        } else {
+            // Chỉ lưu Username để tiện lợi, xóa Password
+            CookieManager.set("LoginUsername", user, 30);
+            CookieManager.erase("LoginPassword");
+        }
+    });
+</script>

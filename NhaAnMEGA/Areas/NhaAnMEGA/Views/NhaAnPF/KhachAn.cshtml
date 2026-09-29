@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "Khách ăn";
+    Layout = "~/Areas/NhaAnMEGA/Views/Shared/_LayoutQuanLy.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/khachan.css" asp-append-version="true">
+}
+
+<div class="qs-trang qs-trang-day">
+
+    <div class="qs-tieu-de">
+        <h1><i class="fa-solid fa-user-group" style="color:var(--qs-xanh)"></i> Khách ăn</h1>
+        <p>Danh sách thẻ khách / nhà thầu được phép lấy suất ăn.</p>
+        <button type="button" class="qs-nut" id="btnHienFormThem">
+            <i class="fa-solid fa-plus"></i> Thêm khách ăn
+        </button>
+    </div>
+
+    <div class="qs-the ka-them" id="theThemMoi">
+        <div class="ka-them-dau">
+            <i class="fa-solid fa-id-card" style="color:var(--qs-luc)"></i>
+            <span>Thêm khách ăn mới</span>
+            <button type="button" class="ka-them-dong" id="btnDongThem" title="Đóng" aria-label="Đóng">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="formThemKhachAn">
+            <div class="ka-luoi">
+                <div>
+                    <label class="qs-nhan" for="oMaThe">Mã thẻ</label>
+                    <input type="text" id="oMaThe" name="MaThe" class="qs-o" required autocomplete="off" placeholder="VD: 1234567" />
+                </div>
+                <div>
+                    <label class="qs-nhan" for="oTenThe">Tên thẻ</label>
+                    <input type="text" id="oTenThe" name="TenThe" class="qs-o" required autocomplete="off" placeholder="Tên người dùng thẻ" />
+                </div>
+                <div>
+                    <label class="qs-nhan" for="oNhaThau">Nhà thầu</label>
+                    <input type="text" id="oNhaThau" name="NhaThau" class="qs-o" required autocomplete="off" placeholder="Tên nhà thầu" />
+                </div>
+                <div class="ka-luoi-nut">
+                    <button type="submit" class="qs-nut qs-nut-luc"><i class="fa-solid fa-check"></i> Thêm</button>
+                    <button type="button" class="qs-nut qs-nut-phu" id="btnHuyThem">Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="qs-the qs-the-cuon">
+        <div class="qs-hang qs-the-tieu-de ka-cong-cu">
+            <div class="qs-o-tim">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="oTimKhachAn" class="qs-o" placeholder="Tìm theo mã thẻ, tên thẻ hoặc nhà thầu..." autocomplete="off" />
+            </div>
+            <select id="chonSoDong" class="qs-o" style="width:auto; flex:0 0 auto;">
+                <option value="0" selected>Tất cả</option>
+                <option value="20">20 dòng</option>
+                <option value="50">50 dòng</option>
+                <option value="100">100 dòng</option>
+                <option value="200">200 dòng</option>
+            </select>
+            <span class="ka-tong">
+                <i class="fa-solid fa-users"></i>
+                <span id="tongKhachAn">0</span> khách
+            </span>
+        </div>
+
+        <div class="qs-bang-boc">
+            <table class="qs-bang" id="bangKhachAn">
+                <thead>
+                    <tr>
+                        <th style="width:170px;">Mã thẻ</th>
+                        <th>Tên thẻ</th>
+                        <th>Nhà thầu</th>
+                        <th style="width:130px; text-align:center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="qs-rong" id="trangThaiKhachAn">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Đang tải danh sách...
+        </div>
+
+        <div class="qs-phan-trang" id="phanTrangKhachAn"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/khachan.js" asp-append-version="true"></script>
+}
