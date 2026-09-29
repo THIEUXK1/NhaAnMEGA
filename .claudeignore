@@ -38,6 +38,9 @@ composer.lock
 *.map
 *.bundle.js
 
+# Thư viện front-end vendored (Bootstrap/jQuery)
+NhaAnMEGA/wwwroot/lib/
+
 # Docs & Meta
 CHANGELOG*
 LICENSE*

@@ -17,8 +17,8 @@ File này chỉ bổ sung phần chi tiết.
   vòng lặp có `CancellationToken`, mỗi vòng bọc try/catch riêng để một lỗi không giết service.
 - **Entity DB-First** ở `Models/Zktime/`, `Models/NhaAnMEGA/` là output scaffold — muốn field tính toán
   thì tạo ViewModel riêng, không sửa file scaffold.
-- Truy vấn: `AsNoTracking()` cho đọc, projection `Select(...)` lấy đúng cột, `Include` để tránh N+1,
-  luôn có `Skip/Take` khi danh sách có thể lớn.
+- Truy vấn đọc theo `core.md`; thêm: `Include` hoặc projection để tránh N+1, `Skip/Take` khi danh sách
+  có thể lớn. SQL thô: [database-safety.md](database-safety.md) mục *Truy vấn an toàn*.
 
 ## Xử lý lỗi & dữ liệu rỗng
 - Endpoint UI luôn trả đúng hình dạng `{ ok, data, message }`; lỗi nghiệp vụ → `ok:false` + `message`

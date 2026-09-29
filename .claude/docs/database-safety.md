@@ -4,10 +4,12 @@ Danh sách cấm tuyệt đối (destructive query, `ExecuteSqlRaw` nối chuỗ
 sửa tay entity DB-First) nằm ở [`../rules/core.md`](../rules/core.md). File này là quy trình chi tiết.
 
 ## Môi trường & chủ sở hữu dữ liệu
-- Hai DB SQL Server trên `10.0.193.252`:
-  - **ThieuIT** — dữ liệu nội bộ ứng dụng (`Context/DBThieuITContext.cs`).
-  - **Zktime** — dữ liệu máy chấm công ZK (`Context/DBZktimePFContext.cs`), **do hệ thống chấm công
-    sở hữu**: coi như chỉ-đọc, chỉ ghi vào các bảng suất ăn do ứng dụng này tạo.
+- **PostgreSQL — DB của web app** (khoá cấu hình `ConnectionStrings:NhaAnMEGA`), dùng chung cho
+  `Context/DBThieuITContext.cs` (nhân viên) và `Context/DBZktimePFContext.cs` (CHECKINOUT, USERINFO,
+  suất ăn, khách ăn, blacklist…). `Tools/DongBoSuatAnPF` ghi vào cùng DB này.
+- **SQL Server `Zktime`** — DB của hệ thống chấm công; chỉ `Tools/ZkPullerPF` ghi vào (CHECKINOUT).
+  Do hệ thống chấm công sở hữu: ngoài CHECKINOUT từ máy quét, coi như chỉ-đọc.
+- Cơ chế giữ chuỗi kết nối: [dotnet-architecture.md](dotnet-architecture.md) mục *Secrets*.
 - Không có DB dev riêng → **mặc định coi mọi kết nối là production**. Không chắc thì hỏi trước.
 - Dữ liệu nhân viên + ảnh quét là dữ liệu cá nhân: không export ra ngoài, không đưa lên dịch vụ ngoài.
 
@@ -24,7 +26,9 @@ sửa tay entity DB-First) nằm ở [`../rules/core.md`](../rules/core.md). Fil
 Dự án **DB-First**: schema đổi ở DB trước, rồi scaffold lại (lệnh trong [dotnet-architecture.md](dotnet-architecture.md)).
 Script SQL thủ công đi kèm phải:
 - Có cặp **up + down** chạy được (rollback thật, `down` không được để trống).
-- Viết **idempotent**: `IF NOT EXISTS (SELECT 1 FROM sys.columns ...) ALTER TABLE ... ADD ...`.
+- Viết **idempotent** (PostgreSQL): `ALTER TABLE ... ADD COLUMN IF NOT EXISTS ...`,
+  `CREATE INDEX IF NOT EXISTS ...`, insert dữ liệu gốc bằng `ON CONFLICT DO NOTHING`;
+  up/down bọc trong `BEGIN; ... COMMIT;` (DDL của PostgreSQL rollback được).
 - Tên mô tả: `Add<Bang>_<Cot>.sql`, `Backfill<...>.sql`.
 - Tách rời: script đổi schema ≠ script backfill dữ liệu.
 - Đổi cột theo trình tự an toàn: thêm cột mới → backfill → chuyển đọc/ghi → bỏ cột cũ ở release sau.
@@ -32,17 +36,10 @@ Script SQL thủ công đi kèm phải:
 - **Review bởi `database-auditor` trước khi apply** — bắt buộc.
 
 ## Truy vấn an toàn
-- Đọc: `AsNoTracking()` + projection đúng cột + phân trang. Không `ToList()` cả bảng.
-- Tham số hoá 100%: `FromSqlInterpolated($"... {bienDauVao}")` hoặc `SqlParameter`,
-  không bao giờ nối chuỗi từ input người dùng.
-- Join chéo ThieuIT ↔ Zktime: không làm trong một LINQ query — lọc hẹp từng bên rồi ghép trong bộ nhớ.
-
-## Nợ bảo mật đang tồn tại
-`Context/DBThieuITContext.cs:22` và `Context/DBZktimePFContext.cs:36` hardcode connection string
-kèm user/password thật trong `OnConfiguring` — đã bị commit vào git.
-Hướng xử lý (chờ quyết định, xem [decision-log.md](../plans/decision-log.md)):
-đổi mật khẩu SQL → chuyển chuỗi kết nối sang `appsettings.Development.json` / user-secrets đã gitignore
-→ inject context qua DI, bỏ `OnConfiguring`.
+Nguyên tắc đọc (AsNoTracking, projection, phân trang) nằm ở `core.md`; ở đây là cách làm:
+- SQL thô trong EF: `FromSqlInterpolated($"... {bienDauVao}")` / `ExecuteSqlInterpolatedAsync`,
+  hoặc `NpgsqlParameter`. `Tools/ZkPullerPF` (SqlClient): `SqlParameter`, không nối chuỗi.
+- Ghép dữ liệu hai DbContext: xem [dotnet-architecture.md](dotnet-architecture.md) mục *Cạm bẫy*.
 
 ## Khi nghi ngờ dữ liệu sai
 1. Dừng ghi, **không** "sửa nhanh" bằng UPDATE tay.

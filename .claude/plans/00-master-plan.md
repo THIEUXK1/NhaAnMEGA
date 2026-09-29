@@ -1,6 +1,6 @@
 # MASTER PLAN — NhaAnMEGA
 
-Stack chốt: ASP.NET Core MVC `net10.0` · EF Core 10 (SQL Server, DB-First) · Areas/NhaAnMEGA · Session auth · jQuery + Bootstrap · ClosedXML.
+Stack chốt: ASP.NET Core MVC `net10.0` · EF Core 10 (PostgreSQL/Npgsql, DB-First) · Areas/NhaAnMEGA · Session auth · jQuery + Bootstrap · ClosedXML.
 Chi tiết ràng buộc: [`../rules/core.md`](../rules/core.md) · state hiện tại: [00-context-memory.md](00-context-memory.md).
 
 | Phase | Mục tiêu | Trạng thái | Kế hoạch |

@@ -4,10 +4,10 @@ Quy tắc cấm & phân bổ rút gọn: [`../rules/core.md`](../rules/core.md).
 git flow, chỗ đặt file mới và quy trình cho mỗi thay đổi.
 
 ## Git flow
-- Nhánh chính `master`. Thay đổi lớn: `feature/<ten>`, `fix/<ten>`, `hotfix/<ten>` — cấm commit thẳng.
+- Nhánh chính `main`. Thay đổi lớn: `feature/<ten>`, `fix/<ten>`, `hotfix/<ten>` — cấm commit thẳng.
 - 1 commit = 1 mục đích. Message `<scope>: <việc đã làm>`
   (vd `khachan: them api them-khach khong reload`, `baocao: xuat excel theo ca`).
-- Rebase/merge về `master` chỉ sau khi `dotnet build -v q --nologo` sạch và đã review.
+- Rebase/merge về `main` chỉ sau khi `dotnet build -v q --nologo` sạch và đã review.
 - Không commit: secrets, connection string thật, `bin/`, `obj/`, `.vs/`, `App_Data/Keys/`,
   ảnh sinh ra lúc chạy.
 

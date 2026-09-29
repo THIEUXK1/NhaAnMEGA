@@ -7,10 +7,10 @@
 - Cây thư mục & route: [dotnet-architecture.md](../docs/dotnet-architecture.md).
 
 ## 0.2 Database
-- DB-First, SQL Server, EF Core 10. Hai context: `Context/DBThieuITContext.cs`, `Context/DBZktimePFContext.cs`.
-- **Đang nợ:** connection string + mật khẩu hardcode trong `OnConfiguring` của cả hai context.
-  Đích đến: `appsettings.Development.json` / user-secrets (đã gitignore) + inject qua DI.
-- Lệnh scaffold lại khi schema đổi & quy trình đổi schema: [database-safety.md](../docs/database-safety.md).
+- DB-First, PostgreSQL (Npgsql), EF Core 10. Hai context: `Context/DBThieuITContext.cs`, `Context/DBZktimePFContext.cs`.
+- Chuỗi kết nối: user-secrets / biến môi trường qua `Utils/ChuoiKetNoi` (đã đạt) — chi tiết
+  [dotnet-architecture.md](../docs/dotnet-architecture.md) mục *Secrets*. Còn lại (tuỳ chọn): inject context qua DI.
+- Lệnh scaffold: [dotnet-architecture.md](../docs/dotnet-architecture.md) · quy trình đổi schema: [database-safety.md](../docs/database-safety.md).
 
 ## 0.3 Hot Reload (BẮT BUỘC khi dev)
 Lệnh + quy tắc chủ động restart: [`../rules/core.md`](../rules/core.md) mục *Hot reload*.
@@ -20,5 +20,5 @@ Trường hợp `dotnet watch` không bắt được (`Program.cs`, `.csproj`, `
 ## 0.4 Definition of Done — Phase 0
 - [ ] `dotnet build -v q --nologo` sạch cảnh báo.
 - [ ] `dotnet watch run` chạy được, sửa `.cshtml` thấy đổi ngay không restart.
-- [ ] Connection string không nằm trong file được commit (chưa đạt).
+- [x] Connection string không nằm trong file được commit.
 - [ ] `.claudeignore` + `.claude/rules/core.md` + `.claude/docs/` hiện diện ở repo.

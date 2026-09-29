@@ -1,7 +1,7 @@
 # CORE — NhaAnMEGA (tự nạp mỗi phiên)
 
 Quản lý suất ăn nhà ăn PF: quét thẻ nhân viên, khách ăn, ảnh quét, báo cáo.
-Stack CHỐT: ASP.NET Core MVC `net10.0` · EF Core 10 (SQL Server, **DB-First**) · Areas/NhaAnMEGA ·
+Stack CHỐT: ASP.NET Core MVC `net10.0` · EF Core 10 (PostgreSQL/Npgsql, **DB-First**) · Areas/NhaAnMEGA ·
 Session auth · jQuery + Bootstrap · ClosedXML · Newtonsoft.Json.
 
 ## Phân bổ file (rút gọn — bảng đầy đủ: `docs/architecture-workflow.md`)
