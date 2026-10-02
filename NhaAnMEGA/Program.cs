@@ -6,6 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 NhaAnMEGA.Utils.ChuoiKetNoi.GiaTri = builder.Configuration.GetConnectionString(NhaAnMEGA.Utils.ChuoiKetNoi.TenKhoa)
     ?? throw new InvalidOperationException($"Chưa cấu hình ConnectionStrings:{NhaAnMEGA.Utils.ChuoiKetNoi.TenKhoa}.");
 
+// 0b. Thư mục lưu ảnh quét: AnhQuet:ThuMuc, bỏ trống thì lưu tại App_Data/AnhQuet trên chính máy chủ
+NhaAnMEGA.Utils.ThuMucAnhQuet.GiaTri = NhaAnMEGA.Utils.ThuMucAnhQuet.TuCauHinh(
+    builder.Configuration[NhaAnMEGA.Utils.ThuMucAnhQuet.TenKhoa], builder.Environment.ContentRootPath);
+
 // 1. Thêm dịch vụ cho Controller và Views (Cần thiết cho Area và Controller của bạn)
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

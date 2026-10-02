@@ -11,8 +11,8 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Service
     {
         private readonly ILogger<XoaAnhDinhKi> _logger;
 
-        // Đường dẫn UNC của nhà ăn PF được cấu hình chính xác theo API mới
-        private readonly string _folderPath = @"\\10.0.193.249\FileServer\ZP-IT\5.E-Form\NhaAnMEGA";
+        // Cùng thư mục lưu ảnh quét với màn hình quét (cấu hình AnhQuet:ThuMuc)
+        private readonly string _folderPath = global::NhaAnMEGA.Utils.ThuMucAnhQuet.GiaTri;
 
         public XoaAnhDinhKi(ILogger<XoaAnhDinhKi> logger)
         {

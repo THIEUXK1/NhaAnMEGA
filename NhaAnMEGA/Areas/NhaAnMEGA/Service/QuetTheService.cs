@@ -120,7 +120,8 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Service
 
             var truyVan = _context.TimeRecodePfs
                 .AsNoTracking()
-                .Where(t => t.GName == tenCong && t.Date == homNay);
+                // Chỉ lấy lượt do máy chấm công ghi, bỏ lượt quét mã vạch cùng cổng (đã tự hiển thị ở luồng quét)
+                .Where(t => t.GName == tenCong && t.Date == homNay && t.So == DongBoZk1Service.GhiChuNguonZk1);
 
             // Lần hỏi đầu tiên chỉ trả về mốc Id để không dội lại toàn bộ lượt quẹt cũ trong ngày lên màn hình
             if (tuId <= 0)

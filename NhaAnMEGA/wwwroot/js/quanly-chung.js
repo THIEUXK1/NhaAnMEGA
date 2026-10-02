@@ -1,4 +1,4 @@
-// Tiện ích dùng chung cho các màn hình quản lý nhà ăn PF
+// Tiện ích dùng chung cho các màn hình quản lý nhà ăn MEGA
 (function () {
     'use strict';
 

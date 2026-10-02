@@ -5,7 +5,7 @@
     const DO_TRE_TIM = 350;
     const SO_NUT_TRANG_TOI_DA = 7;
     const BUA_NGOAI_GIO = '0';   // Lượt quẹt ngoài mọi khung giờ bữa, server ghi Bua = "0"
-    const SO_COT_CHI_TIET = 7;   // Số cột bảng chi tiết, dùng cho colspan của dòng mở rộng
+    const SO_COT_CHI_TIET = 7;   // Số cột bảng chi tiết (chưa tính cột xoá), dùng cho colspan của dòng mở rộng
 
     const oTuNgay = document.getElementById('oTuNgay');
     const oDenNgay = document.getElementById('oDenNgay');
@@ -31,6 +31,22 @@
     let tongBanGhi = 0;
     let soDongMoiTrang = 0; // 0 = xem tất cả trong 1 trang
     let hanTim = null;
+    let duocXoa = false;    // Server báo tài khoản hiện tại có quyền xoá lượt quét
+    const nutXoaTest = document.getElementById('btnXoaTest');
+
+    // Ẩn/hiện tiêu đề cột Xoá; tự tạo nếu view chưa có (view cũ còn cache khi chưa restart)
+    function datCotXoa(hien) {
+        let cotXoa = document.getElementById('cotXoa');
+        if (!cotXoa) {
+            if (!hien) return;
+            cotXoa = document.createElement('th');
+            cotXoa.id = 'cotXoa';
+            cotXoa.style.width = '70px';
+            cotXoa.textContent = 'Xoá';
+            bang.querySelector('thead tr').appendChild(cotXoa);
+        }
+        cotXoa.hidden = !hien;
+    }
 
     // Bộ lọc dạng tích (nhiều lựa chọn): nút thả xuống + danh sách checkbox
     function taoLocTich(boc, khiDoi) {
@@ -275,6 +291,11 @@
                 <td>${bg.bua ? QS.chuanHoa(tenBua(bg.bua)) : 'N/A'}</td>
                 <td>${QS.chuanHoa(bg.gName) || 'N/A'}</td>
                 <td>${QS.chuanHoa(thoiGian)}</td>
+                ${duocXoa ? `<td>${bg.laMaTest ? `
+                    <button type="button" class="qs-nut qs-nut-do qs-nut-nho btn-xoa-luot"
+                            data-id="${QS.chuanHoa(bg.id)}" data-ten="${QS.chuanHoa(bg.workerName)}"
+                            title="Xoá lượt quét này"><i class="fa-solid fa-trash"></i></button>` : ''}
+                </td>` : ''}
             </tr>`;
     }
 
@@ -328,7 +349,7 @@
 
         const dongChiTiet = document.createElement('tr');
         dongChiTiet.className = 'qs-dong-mo-rong';
-        dongChiTiet.innerHTML = `<td colspan="${SO_COT_CHI_TIET}">
+        dongChiTiet.innerHTML = `<td colspan="${SO_COT_CHI_TIET + (duocXoa ? 1 : 0)}">
                 <div class="qs-rong"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải ảnh lượt quét...</div>
             </td>`;
         dongCha.insertAdjacentElement('afterend', dongChiTiet);
@@ -349,7 +370,32 @@
         }
     }
 
+    // Xoá 1 lượt quét (nút chỉ có khi server cho phép, server vẫn kiểm quyền lại)
+    async function xoaLuotQuet(nut) {
+        if (!confirm(`Xác nhận xoá lượt quét ID ${nut.dataset.id} của ${nut.dataset.ten || 'N/A'}? Không thể khôi phục.`)) return;
+
+        await QS.nutBan(nut, async () => {
+            try {
+                const res = await fetch(`/MG/An/BaoCaoNgay/Xoa/${encodeURIComponent(nut.dataset.id)}`, { method: 'POST' });
+                const ketQua = await res.json();
+                if (!ketQua.ok) throw new Error(ketQua.message || 'Xoá thất bại');
+
+                QS.toast(ketQua.message, 'ok');
+                taiBaoCao(trangHienTai);   // tải lại để tổng số, thống kê theo bữa khớp dữ liệu
+            } catch (err) {
+                QS.toast('Không xoá được: ' + err.message, 'loi');
+            }
+        });
+    }
+
     thanBang.addEventListener('click', function (e) {
+        const nutXoa = e.target.closest('.btn-xoa-luot');
+        if (nutXoa) {
+            e.preventDefault();
+            xoaLuotQuet(nutXoa);
+            return;
+        }
+
         const nut = e.target.closest('.btn-mo-rong');
         if (!nut) return;
         e.preventDefault();
@@ -526,6 +572,9 @@
 
             tongBanGhi = ketQua.data.totalItems;
             soDongMoiTrang = ketQua.data.pageSize;
+            duocXoa = ketQua.data.duocXoa === true;
+            datCotXoa(duocXoa);
+            if (nutXoaTest) nutXoaTest.hidden = !duocXoa;
             tongSo.textContent = tongBanGhi;
 
             // Xem tất cả nhưng chạm trần server thì báo để người dùng chọn số dòng/trang
@@ -634,6 +683,31 @@
 
     const nutXuat = document.getElementById('btnXuatExcel');
     nutXuat.addEventListener('click', xuatExcel);
+
+    // Xoá nhanh mọi lượt quét mã test trong khoảng ngày đang chọn
+    async function xoaNhanhTest() {
+        if (!oTuNgay.value || !oDenNgay.value || oTuNgay.value > oDenNgay.value) {
+            QS.toast('Vui lòng chọn khoảng ngày hợp lệ', 'nhac');
+            return;
+        }
+        if (!confirm(`Xoá TẤT CẢ lượt quét của mã test 111…999 từ ${ngayHienThi(oTuNgay.value)} đến ${ngayHienThi(oDenNgay.value)}? Không thể khôi phục.`)) return;
+
+        await QS.nutBan(nutXoaTest, async () => {
+            try {
+                const thamSo = new URLSearchParams({ fromDate: oTuNgay.value, toDate: oDenNgay.value });
+                const res = await fetch(`/MG/An/BaoCaoNgay/XoaTest?${thamSo}`, { method: 'POST' });
+                const ketQua = await res.json();
+                if (!ketQua.ok) throw new Error(ketQua.message || 'Xoá thất bại');
+
+                QS.toast(ketQua.message, 'ok');
+                taiBaoCao(1);
+            } catch (err) {
+                QS.toast('Không xoá được: ' + err.message, 'loi');
+            }
+        });
+    }
+
+    if (nutXoaTest) nutXoaTest.addEventListener('click', xoaNhanhTest);
 
     // Bỏ lọc: đưa mọi bộ lọc về mặc định (hôm nay, không tích bữa/cổng, không từ khoá)
     document.getElementById('btnBoLoc').addEventListener('click', function () {

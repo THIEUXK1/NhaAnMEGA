@@ -1,4 +1,4 @@
-// Quản lý camera màn hình quét thẻ nhà ăn PF: xin quyền truy cập, chọn thiết bị và phát luồng hình
+// Quản lý camera màn hình quét thẻ nhà ăn MEGA: xin quyền truy cập, chọn thiết bị và phát luồng hình
 (function () {
     const ID_VIDEO = "cameraFeed";
     const ID_SELECT = "cameraSelect";

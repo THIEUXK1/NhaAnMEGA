@@ -429,6 +429,11 @@ body.qs-thu-gon .qs-main {
     background: var(--qs-do);
 }
 
+/* display:inline-flex của .qs-nut đè thuộc tính hidden → ép ẩn lại */
+.qs-nut[hidden] {
+    display: none;
+}
+
 .qs-nut-nho {
     padding: 6px 12px;
     font-size: .85rem;

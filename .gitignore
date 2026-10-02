@@ -366,6 +366,7 @@ Tools/ZkPullerPF/appsettings.json
 
 # Khoá mã hoá cookie ghi nhớ đăng nhập (không đưa lên git)
 NhaAnMEGA/App_Data/Keys/
+NhaAnMEGA/App_Data/AnhQuet/
 
 # Backup du lieu truoc khi xoa (khong commit)
 _backup_db/

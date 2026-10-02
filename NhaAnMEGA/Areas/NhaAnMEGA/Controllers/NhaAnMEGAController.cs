@@ -15,8 +15,8 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
     {
 
         #region khai bao
-        // Đường dẫn thư mục gốc mạng nội bộ lưu ảnh quét nhà ăn PF
-        private const string RootPathAnhQuet = @"\\10.0.193.249\FileServer\ZP-IT\5.E-Form\NhaAnMEGA";
+        // Thư mục lưu ảnh quét nhà ăn PF (cấu hình AnhQuet:ThuMuc, mặc định App_Data/AnhQuet trên máy chủ)
+        private static string RootPathAnhQuet => global::NhaAnMEGA.Utils.ThuMucAnhQuet.GiaTri;
 
         // Máy chấm công ghi nhận nhân viên quên thẻ
         private const string SensorQuenThe = "109";
@@ -545,7 +545,8 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
                     depId = x.DepId,
                     gName = x.GName,
                     bua = x.Bua,
-                    mealtime = x.Mealtime
+                    mealtime = x.Mealtime,
+                    laMaTest = x.WorkerId != null && XoaLuotQuet.DS_MA_TEST.Contains(x.WorkerId)
                 })
                 .ToListAsync();
 
@@ -561,9 +562,64 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
                     gioiHanTatCa = SoDongToiDaBaoCao,
                     tongTheoBua,
                     dsBua,
-                    dsCong
+                    dsCong,
+                    duocXoa = XoaLuotQuet.DuocXoa(HttpContext)
                 },
                 message = (string?)null
+            });
+        }
+
+        // Xoá 1 lượt quét (chỉ tài khoản được phép, kiểm quyền phía server)
+        [HttpPost("/MG/An/BaoCaoNgay/Xoa/{id:int}")]
+        public async Task<IActionResult> XoaLuotQuetBaoCao(int id,
+            [FromServices] ILogger<NhaAnPFController> logger)
+        {
+            if (HttpContext.Session.GetString("NhaAnPF") == null)
+            {
+                return Json(new { ok = false, data = (object?)null, message = "Phiên đăng nhập đã hết hạn" });
+            }
+
+            if (!XoaLuotQuet.DuocXoa(HttpContext))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden,
+                    new { ok = false, data = (object?)null, message = "Bạn không có quyền xoá lượt quét" });
+            }
+
+            var daXoa = await XoaLuotQuet.XoaAsync(_context, id, XoaLuotQuet.TenDangNhapHienTai(HttpContext)!, logger);
+            return Json(new
+            {
+                ok = daXoa,
+                data = (object?)null,
+                message = daXoa ? "Đã xoá lượt quét" : "Không tìm thấy lượt quét của mã test"
+            });
+        }
+
+        // Xoá nhanh mọi lượt quét mã test trong khoảng ngày đang chọn
+        [HttpPost("/MG/An/BaoCaoNgay/XoaTest")]
+        public async Task<IActionResult> XoaNhanhTestBaoCao(DateTime? fromDate, DateTime? toDate,
+            [FromServices] ILogger<NhaAnPFController> logger)
+        {
+            if (HttpContext.Session.GetString("NhaAnPF") == null)
+            {
+                return Json(new { ok = false, data = (object?)null, message = "Phiên đăng nhập đã hết hạn" });
+            }
+
+            if (!XoaLuotQuet.DuocXoa(HttpContext))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden,
+                    new { ok = false, data = (object?)null, message = "Bạn không có quyền xoá lượt quét" });
+            }
+
+            var start = (fromDate ?? DateTime.Today).Date;
+            var end = (toDate ?? start).Date.AddDays(1).AddTicks(-1);
+
+            var soDong = await XoaLuotQuet.XoaTatCaTestAsync(_context, start, end,
+                XoaLuotQuet.TenDangNhapHienTai(HttpContext)!, logger);
+            return Json(new
+            {
+                ok = true,
+                data = new { soDong },
+                message = soDong > 0 ? $"Đã xoá {soDong} lượt quét mã test" : "Không có lượt quét mã test nào để xoá"
             });
         }
 
