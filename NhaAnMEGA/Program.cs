@@ -56,14 +56,14 @@ app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area:exists}/{controller=NhaAnPF}/{action=Login}/{id?}");
 
-// Cấu hình Route mặc định để khi mở Web là vào thẳng /PF/Login
+// Cấu hình Route mặc định để khi mở Web là vào thẳng /MG/Login
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=NhaAnPF}/{action=Login}/{id?}");
 
-// Nếu bạn muốn ép buộc trang chủ "/" trỏ thẳng về "/PF/Login"
+// Nếu bạn muốn ép buộc trang chủ "/" trỏ thẳng về "/MG/Login"
 app.MapGet("/", context => {
-    context.Response.Redirect("/PF/Login");
+    context.Response.Redirect("/MG/Login");
     return Task.CompletedTask;
 });
 

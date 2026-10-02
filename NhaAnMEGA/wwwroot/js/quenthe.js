@@ -1,4 +1,4 @@
-// Màn hình báo cáo / xuất Excel quên thẻ (/PF/An/QuenThe)
+// Màn hình báo cáo / xuất Excel quên thẻ (/MG/An/QuenThe)
 (function () {
     'use strict';
 
@@ -112,7 +112,7 @@
         });
 
         try {
-            const res = await fetch(`/PF/An/QuenThe/DuLieu?${thamSo}`);
+            const res = await fetch(`/MG/An/QuenThe/DuLieu?${thamSo}`);
             if (!res.ok) throw new Error('Không tải được báo cáo');
 
             const ketQua = await res.json();
@@ -165,7 +165,7 @@
 
         await QS.nutBan(nutXuat, async () => {
             try {
-                const res = await fetch('/PF/An/ExportExcel', {
+                const res = await fetch('/MG/An/ExportExcel', {
                     method: 'POST',
                     body: new URLSearchParams(new FormData(form))
                 });

@@ -38,14 +38,14 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         //nhà ăn best
 
         // Thêm Route cụ thể cho trang Login
-        [HttpGet("/PF/Login")]
+        [HttpGet("/MG/Login")]
         public IActionResult Login()
         {
             return View();
         }
 
         // Thêm Route cụ thể cho xử lý Login (POST)
-        [HttpPost("/PF/Login2")]
+        [HttpPost("/MG/Login2")]
         public IActionResult Login2(UserLoginPF user)
         {
             var authenticatedUser = _DbThieuXk.NhanViens.FirstOrDefault(u => u.TenDangNhap == user.Username && u.MatKhau == user.Password && u.TrangThai == true);
@@ -78,7 +78,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             public string Password { get; set; } = string.Empty;
         }
         // Đăng xuất: xoá session và bỏ luôn ghi nhớ trên máy này
-        [HttpGet("/PF/Logout")]
+        [HttpGet("/MG/Logout")]
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -104,7 +104,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // Giữ nguyên Route bạn đã có hoặc tùy chỉnh lại nếu muốn đồng bộ
-        [HttpGet("/PF/GetSessionRemainingTime")]
+        [HttpGet("/MG/GetSessionRemainingTime")]
         public JsonResult GetSessionRemainingTime()
         {
             // Máy đã ghi nhớ đăng nhập vẫn đếm ngược để trang tự F5 làm mới phiên;
@@ -149,7 +149,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #region Nhà ăn PF
 
         #region 1. Điều hướng và Quản lý Trang chính (Index)
-        [HttpGet("/PF/An")]
+        [HttpGet("/MG/An")]
         public IActionResult Index()
         {
             // Kiểm tra nếu Session hết hạn
@@ -172,7 +172,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #endregion
 
         #region 2. Xử lý Ghi nhận Quẹt thẻ chính (ProcessBarcode)
-        [HttpPost("/PF/Nhanbarcode")]
+        [HttpPost("/MG/Nhanbarcode")]
         public async Task<IActionResult> ProcessBarcode(string barcode, int idgate, IFormFile? imageFile)
         {
             if (string.IsNullOrWhiteSpace(barcode))
@@ -290,7 +290,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
         #region 3b. Lượt quẹt máy ZK1 vừa đồng bộ (QuetZk1Moi)
         // Trả về các lượt quẹt máy ZK1 vừa được đồng bộ để màn hình quét hiển thị như một lượt quét mã vạch
-        [HttpGet("/PF/QuetZk1Moi")]
+        [HttpGet("/MG/QuetZk1Moi")]
         public async Task<IActionResult> QuetZk1Moi(int tuId = 0)
         {
             try
@@ -310,7 +310,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         private const int SoNgayBuToiDa = 7;   // Chặn quét bù khoảng quá dài làm nặng DB
 
         // Ghi nhận bù các lượt quẹt máy ZK1 mà phần mềm ZKTime đẩy về muộn, đã lọt khỏi vòng chạy ngầm
-        [HttpPost("/PF/DongBoZk1Bu")]
+        [HttpPost("/MG/DongBoZk1Bu")]
         public async Task<IActionResult> DongBoZk1Bu(DateTime tu, DateTime den)
         {
             if (den <= tu)
@@ -343,7 +343,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #endregion
 
         #region 4. Quản lý danh sách Cổng (Gate)
-        [HttpGet("/PF/Gate")]
+        [HttpGet("/MG/Gate")]
         public async Task<IActionResult> GetGates()
         {
             var gates = await _context.GatePfs.AsNoTracking()
@@ -359,7 +359,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #endregion
 
         #region 5. Kiểm tra và Ghi nhận Thống kê (TotalMeals)
-        [HttpGet("/PF/TotalMeals")]
+        [HttpGet("/MG/TotalMeals")]
         public async Task<JsonResult> TotalMeals()
         {
             var authenticatedUser = HttpContext.Session.GetString("NhaAnPF");
@@ -394,7 +394,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
         #region 6. Truy vấn Số liệu và Báo cáo (Báo cáo Ngày / Thống kê cổng quét)
         // Phương thức lấy dữ liệu báo cáo theo ngày
-        [HttpGet("/PF/XuatEX")]
+        [HttpGet("/MG/XuatEX")]
         public async Task<JsonResult> GetReportData(DateTime? startDate, DateTime? endDate)
         {
             try
@@ -432,7 +432,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // Trang báo cáo suất ăn hằng ngày
-        [HttpGet("/PF/An/BaoCaoNgay")]
+        [HttpGet("/MG/An/BaoCaoNgay")]
         public IActionResult BaoCaoNgay()
         {
             if (HttpContext.Session.GetString("NhaAnPF") == null)
@@ -493,7 +493,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // Dữ liệu cho trang báo cáo hằng ngày (JSON, phân trang, không reload trang)
-        [HttpGet("/PF/An/BaoCaoNgay/DuLieu")]
+        [HttpGet("/MG/An/BaoCaoNgay/DuLieu")]
         public async Task<IActionResult> DuLieuBaoCaoNgay(DateTime? fromDate, DateTime? toDate, string? bua, string? cong, string? tuKhoa,
                                                           int page = 1, int pageSize = SoDongMoiTrangBaoCao)
         {
@@ -568,7 +568,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // Tổng hợp suất ăn theo từng ngày trong khoảng (JSON, dùng cho chế độ "Gộp theo ngày")
-        [HttpGet("/PF/An/BaoCaoNgay/GopNgay")]
+        [HttpGet("/MG/An/BaoCaoNgay/GopNgay")]
         public async Task<IActionResult> GopNgayBaoCao(DateTime? fromDate, DateTime? toDate, string? bua, string? cong, string? tuKhoa)
         {
             if (HttpContext.Session.GetString("NhaAnPF") == null)
@@ -618,7 +618,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // Xuất Excel đúng bộ lọc đang xem: gop = true là bảng tổng hợp theo ngày, ngược lại là bảng chi tiết
-        [HttpGet("/PF/An/BaoCaoNgay/Excel")]
+        [HttpGet("/MG/An/BaoCaoNgay/Excel")]
         public async Task<IActionResult> XuatExcelBaoCaoNgay(DateTime? fromDate, DateTime? toDate,
                                                              string? bua, string? cong, string? tuKhoa, bool gop = false)
         {
@@ -673,7 +673,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             return BaoCaoNgayExcelService.XuatTongHop(cotBua, theoNgay, tuNgay, denNgay);
         }
 
-        [HttpGet("/PF/GetMealCountByGate")]
+        [HttpGet("/MG/GetMealCountByGate")]
         public async Task<IActionResult> GetMealCountByGate(int idgate)
         {
             try
@@ -757,7 +757,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #endregion
 
         #region 7. Thêm mới Tài khoản và Quản lý nhân sự ngoại vi (addnv)
-        [HttpPost("/PF/addnv")]
+        [HttpPost("/MG/addnv")]
         public async Task<IActionResult> Add([FromBody] Employee data)
         {
             var authenticatedUser = HttpContext.Session.GetString("NhaAnPF");
@@ -811,7 +811,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #endregion
 
         #region 8. Giám sát thiết bị chấm vân tay ngoại vi (PingStatus)
-        [HttpGet("/PF/PingStatus")]
+        [HttpGet("/MG/PingStatus")]
         public async Task<IActionResult> PingStatus()
         {
             string ip = "10.0.198.12";
@@ -916,7 +916,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #region Blacklist Management (Unique Actions)
 
         // 1. Hiển thị danh sách - Tên hàm: GetBlacklistIndex
-        [HttpGet("/PF/BlackList")]
+        [HttpGet("/MG/BlackList")]
         public IActionResult GetBlacklistIndex()
         {
             var authenticatedUser = HttpContext.Session.GetString("NhaAnPF");
@@ -927,7 +927,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // 2. Thêm hoặc Cập nhật - Tên hàm: PostSaveBlacklist
-        [HttpPost("/PF/BlackList/Save")]
+        [HttpPost("/MG/BlackList/Save")]
         public IActionResult PostSaveBlacklist(BlacklistPf model)
         {
             if (model.Id == 0)
@@ -943,7 +943,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // 3. Xóa bản ghi - Tên hàm: PostRemoveBlacklist
-        [HttpPost("/PF/BlackList/Remove/{id}")]
+        [HttpPost("/MG/BlackList/Remove/{id}")]
         public IActionResult PostRemoveBlacklist(int id)
         {
             var item = _context.BlacklistPfs.Find(id);
@@ -956,7 +956,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // 4. Tải File Excel Mẫu - Tên hàm: GetBlacklistTemplate
-        [HttpGet("/PF/BlackList/DownloadTemplate")]
+        [HttpGet("/MG/BlackList/DownloadTemplate")]
         public IActionResult GetBlacklistTemplate()
         {
             using (var workbook = new XLWorkbook())
@@ -979,7 +979,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
         // 5. Thêm dữ liệu bằng file Excel - Tên hàm: PostImportBlacklistExcel
-        [HttpPost("/PF/BlackList/Import")]
+        [HttpPost("/MG/BlackList/Import")]
         public async Task<IActionResult> PostImportBlacklistExcel(IFormFile file)
         {
             if (file == null || file.Length == 0) return RedirectToAction(nameof(GetBlacklistIndex));
@@ -1019,7 +1019,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
         #region Check ảnh
 
-        [HttpGet("/PF/An/CheckAnh")]
+        [HttpGet("/MG/An/CheckAnh")]
         public IActionResult IndexAnh()
         {
             var authenticatedUser = HttpContext.Session.GetString("NhaAnPF");
@@ -1035,7 +1035,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             }
         }
 
-        [HttpGet("/PF/An/CheckAnhData")]
+        [HttpGet("/MG/An/CheckAnhData")]
         public IActionResult IndexAnhdata(int id)
         {
             var record = _context.TimeRecodePfs.FirstOrDefault(x => x.Id == id);
@@ -1082,6 +1082,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
         #region khách ăn PF
 
+        [HttpGet("/MG/KhachAn")]
         public async Task<IActionResult> KhachAn(string searchString, int page = 1, int pageSize = 20)
         {
             // Kiểm tra nếu Session hết hạn
@@ -1131,7 +1132,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
 
         // Trả danh sách khách ăn dạng JSON cho UI (tìm kiếm / phân trang không reload trang)
-        [HttpGet("Pf/khakh/list")]
+        [HttpGet("/MG/khakh/list")]
         public async Task<IActionResult> DanhSachKhachAn(string? searchString, int page = 1, int pageSize = 20)
         {
             if (IsSessionExpired() || HttpContext.Session.GetString("NhaAnPF") == null)
@@ -1165,7 +1166,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             });
         }
 
-        [HttpPost("Pf/khakh/add")]
+        [HttpPost("/MG/khakh/add")]
         public async Task<IActionResult> Add([FromBody] KhachAnPf newKhachAn)
         {
             // Kiểm tra nếu Session hết hạn
@@ -1207,7 +1208,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         }
 
 
-        [HttpPost("Pf/khakh/delete/{id}")]
+        [HttpPost("/MG/khakh/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             // Kiểm tra nếu Session hết hạn
@@ -1237,7 +1238,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
 
             return RedirectToAction("KhachAn");
         }
-        [HttpPost("Pf/khakh/update")]
+        [HttpPost("/MG/khakh/update")]
         public IActionResult Update([FromBody] KhachAnModel model)
         {
             var item = _context.KhachAnPfs.FirstOrDefault(x => x.Id == model.Id);
@@ -1262,7 +1263,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
         #region Check Quên thẻ
 
 
-        [HttpGet("/PF/An/QuenThe")]
+        [HttpGet("/MG/An/QuenThe")]
         public IActionResult QuenThe()
         {
             var authenticatedUser = HttpContext.Session.GetString("NhaAnPF");
@@ -1297,7 +1298,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             public string? BoPhan { get; set; } // Thêm dòng này
         }
         // Xem trước báo cáo quên thẻ ngay trên UI (mặc định là hôm nay)
-        [HttpGet("/PF/An/QuenThe/DuLieu")]
+        [HttpGet("/MG/An/QuenThe/DuLieu")]
         public async Task<IActionResult> DuLieuQuenThe(DateTime? fromDate, DateTime? toDate, int page = 1, int pageSize = SoDongMoiTrangQuenThe)
         {
             if (HttpContext.Session.GetString("NhaAnPF") == null)
@@ -1338,7 +1339,7 @@ namespace NhaAnMEGA.Areas.NhaAnMEGA.Controllers
             });
         }
 
-        [HttpPost("/PF/An/ExportExcel")]
+        [HttpPost("/MG/An/ExportExcel")]
         public IActionResult ExportExcel(DateTime fromDate, DateTime toDate)
         {
             // Nếu cùng ngày, mở rộng khoảng từ 00:00 đến 23:59:59 của ngày đó

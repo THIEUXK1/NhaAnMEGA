@@ -1,4 +1,4 @@
-// Màn hình quản lý khách ăn (/NhaAnMEGA/NhaAnPF/KhachAn)
+// Màn hình quản lý khách ăn (/MG/KhachAn)
 (function () {
     'use strict';
 
@@ -128,7 +128,7 @@
         });
 
         try {
-            const res = await fetch(`/Pf/khakh/list?${thamSo}`);
+            const res = await fetch(`/MG/khakh/list?${thamSo}`);
             if (!res.ok) throw new Error('Không tải được dữ liệu');
 
             const ketQua = await res.json();
@@ -185,7 +185,7 @@
             };
 
             try {
-                const res = await fetch('/Pf/khakh/add', {
+                const res = await fetch('/MG/khakh/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(duLieu)
@@ -220,7 +220,7 @@
         if (nutLuu) {
             await nutBanIcon(nutLuu, async () => {
                 try {
-                    const res = await fetch('/Pf/khakh/update', {
+                    const res = await fetch('/MG/khakh/update', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -246,7 +246,7 @@
 
         await nutBanIcon(nutXoa, async () => {
             try {
-                const res = await fetch(`/Pf/khakh/delete/${id}`, { method: 'POST' });
+                const res = await fetch(`/MG/khakh/delete/${id}`, { method: 'POST' });
                 if (!res.ok) throw new Error('Xóa thất bại');
 
                 dong.remove();

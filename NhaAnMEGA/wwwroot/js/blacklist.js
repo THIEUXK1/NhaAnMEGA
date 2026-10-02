@@ -1,15 +1,15 @@
-// Màn hình quản lý danh sách đen (/PF/BlackList)
+// Màn hình quản lý danh sách đen (/MG/BlackList)
 (function () {
     'use strict';
 
-    const DUONG_DAN_TRANG = '/PF/BlackList';
+    const DUONG_DAN_TRANG = '/MG/BlackList';
 
     const oTim = document.getElementById('oTimBlacklist');
     const bang = document.getElementById('bangBlacklist');
     const khongCoDuLieu = document.getElementById('khongCoBlacklist');
     const tongSo = document.getElementById('tongBlacklist');
     const formLuu = document.getElementById('formBlacklist');
-    const formImport = document.querySelector('form[action="/PF/BlackList/Import"]');
+    const formImport = document.querySelector('form[action="/MG/BlackList/Import"]');
 
     // Nạp lại phần thân bảng từ server mà không tải lại trang
     async function napLaiBang() {
@@ -74,7 +74,7 @@
 
         await QS.nutBan(nutXoa, async () => {
             try {
-                const res = await fetch(`/PF/BlackList/Remove/${nutXoa.dataset.id}`, { method: 'POST' });
+                const res = await fetch(`/MG/BlackList/Remove/${nutXoa.dataset.id}`, { method: 'POST' });
                 if (!res.ok) throw new Error('Xóa thất bại');
 
                 nutXoa.closest('tr').remove();
@@ -92,7 +92,7 @@
 
         await QS.nutBan(nutLuu, async () => {
             try {
-                const res = await fetch('/PF/BlackList/Save', {
+                const res = await fetch('/MG/BlackList/Save', {
                     method: 'POST',
                     body: new URLSearchParams(new FormData(formLuu))
                 });
@@ -113,7 +113,7 @@
 
         await QS.nutBan(nutImport, async () => {
             try {
-                const res = await fetch('/PF/BlackList/Import', {
+                const res = await fetch('/MG/BlackList/Import', {
                     method: 'POST',
                     body: new FormData(formImport)
                 });

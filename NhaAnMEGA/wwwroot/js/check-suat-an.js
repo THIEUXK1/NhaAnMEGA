@@ -1,4 +1,4 @@
-// Màn hình tra cứu ảnh suất ăn (/PF/An/CheckAnh)
+// Màn hình tra cứu ảnh suất ăn (/MG/An/CheckAnh)
 (function () {
     'use strict';
 
@@ -47,7 +47,7 @@
         khungKetQua.innerHTML = '<div class="qs-rong"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>';
 
         try {
-            const res = await fetch(`/PF/An/CheckAnhData?id=${encodeURIComponent(id)}`);
+            const res = await fetch(`/MG/An/CheckAnhData?id=${encodeURIComponent(id)}`);
             if (!res.ok) throw new Error('Không tìm thấy dữ liệu với ID này');
 
             const data = await res.json();
@@ -69,7 +69,7 @@
         traCuu();
     });
 
-    // Mở từ báo cáo hằng ngày (/PF/An/CheckAnh?id=123): điền sẵn ID và tra luôn
+    // Mở từ báo cáo hằng ngày (/MG/An/CheckAnh?id=123): điền sẵn ID và tra luôn
     const idTuUrl = new URLSearchParams(location.search).get('id');
     if (idTuUrl) {
         oId.value = idTuUrl;

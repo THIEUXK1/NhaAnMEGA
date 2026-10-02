@@ -1,4 +1,4 @@
-// Màn hình báo cáo suất ăn hằng ngày (/PF/An/BaoCaoNgay)
+// Màn hình báo cáo suất ăn hằng ngày (/MG/An/BaoCaoNgay)
 (function () {
     'use strict';
 
@@ -335,7 +335,7 @@
 
         const o = dongChiTiet.firstElementChild;
         try {
-            const res = await fetch(`/PF/An/CheckAnhData?id=${encodeURIComponent(nut.dataset.id)}`);
+            const res = await fetch(`/MG/An/CheckAnhData?id=${encodeURIComponent(nut.dataset.id)}`);
             if (!res.ok) throw new Error('Không tìm thấy dữ liệu của lượt quét này');
 
             const d = await res.json();
@@ -442,7 +442,7 @@
         });
 
         try {
-            const res = await fetch(`/PF/An/BaoCaoNgay/GopNgay?${thamSo}`);
+            const res = await fetch(`/MG/An/BaoCaoNgay/GopNgay?${thamSo}`);
             if (!res.ok) throw new Error('Không tải được báo cáo');
 
             const ketQua = await res.json();
@@ -518,7 +518,7 @@
         });
 
         try {
-            const res = await fetch(`/PF/An/BaoCaoNgay/DuLieu?${thamSo}`);
+            const res = await fetch(`/MG/An/BaoCaoNgay/DuLieu?${thamSo}`);
             if (!res.ok) throw new Error('Không tải được báo cáo');
 
             const ketQua = await res.json();
@@ -603,7 +603,7 @@
         nutXuat.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xuất...';
 
         try {
-            const res = await fetch(`/PF/An/BaoCaoNgay/Excel?${thamSo}`);
+            const res = await fetch(`/MG/An/BaoCaoNgay/Excel?${thamSo}`);
             if (!res.ok) throw new Error('Không xuất được file Excel');
 
             // Server trả JSON khi phiên đăng nhập hết hạn

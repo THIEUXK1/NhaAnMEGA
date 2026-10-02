@@ -45,25 +45,12 @@ Session auth · jQuery + Bootstrap · ClosedXML · Newtonsoft.Json.
 - Truy vấn chỉ đọc: `AsNoTracking()`, luôn phân trang, projection thay vì `ToList()` cả bảng.
 - Tên biến / comment nghiệp vụ viết **tiếng Việt**; giữ mật độ comment như file xung quanh. UI tiếng Việt.
 
-## Zero-fluff
-Trả lời trực diện: không chào hỏi, không mở bài, không tóm tắt lại yêu cầu, không khen.
-Chỉ xuất đoạn code thay đổi — cấm in lại file/code không đổi. Không tự thêm doc/changelog/format pass.
-
-## Output clamping
+## Zero-fluff · Output clamping · Hot reload
+Quy tắc chung nằm ở `~/.claude/CLAUDE.md` (tự nạp mọi phiên) — không chép lại. Phần riêng .NET:
 - Build/test: `dotnet build -v q --nologo`, `dotnet test -v q --nologo`;
   chỉ cần lỗi thì `... | Select-String -Pattern 'error|warning|FAILED'`.
-- Đọc/tìm file luôn giới hạn dòng: PowerShell `| Select-Object -First 20`, `Get-Content f -TotalCount 20`;
-  Bash `grep/find/cat ... | head -n 20`.
-- Git: `git status --short`, `git log --oneline -10`, `git diff --stat` trước khi diff từng file.
-- Chỉ chạy lại verbose khi thất bại, và chỉ đúng phần lỗi. Không in cả file / cả cây thư mục.
-
-## Hot reload (BẮT BUỘC khi dev)
-```
-dotnet watch run --project NhaAnMEGA/NhaAnMEGA.csproj
-```
-Chạy nền; không dùng `dotnet run` trần; không dùng lệnh xoá màn hình (watcher clear sẽ nuốt log lỗi).
-Sửa `.cshtml`/`css`/`js`/`appsettings` mà chưa thấy đổi, hoặc watcher báo cần rebuild →
-**chủ động restart ngay, không hỏi**. Không kéo build step mới vào chỉ để có hot reload.
+- Dev (BẮT BUỘC, chạy nền): `dotnet watch run --project NhaAnMEGA/NhaAnMEGA.csproj` — không `dotnet run` trần.
+  Đổi `Program.cs`/`.csproj`/`appsettings` hoặc watcher báo cần rebuild → restart ngay, không hỏi.
 
 ## Subagent (`~/.claude/agents/`)
 - `system-architect` — thẩm định kiến trúc, đổi stack, phân tầng. Đọc-only.
